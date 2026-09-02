@@ -1,14 +1,13 @@
 /* Mir Financial Services — course player
    Vanilla JS. Drives the free video course on course.html.
    Video host: YouTube (IFrame Player API).
-   Comments: giscus (GitHub Discussions), one thread per lesson.
-   No gate: every lesson is open. A soft, optional opt-in form sits under
-   the player for people who want to hear about future resources.
+   No gate: every lesson is open. An optional opt-in form sits under the
+   player, and a one-time popup appears after the visitor has spent a
+   little time on the page. Neither ever blocks a video.
 
    ============================================================
    1. FILL IN THE COURSE CONTENT BELOW
-   2. Install the giscus GitHub app once (see COURSE-SETUP.md)
-   3. FORM_ENDPOINT can stay as-is or point to a dedicated Formspree form
+   2. FORM_ENDPOINT can stay as-is or point to a dedicated Formspree form
    ============================================================ */
 (function () {
   "use strict";
@@ -35,22 +34,11 @@
     ]
   };
 
-  /* ---- 2. giscus (comments) -------------------------------------------- */
-  /* One-time setup: install https://github.com/apps/giscus on the
-     Mir-Financial-Services/mir-website repo. The ids below are already
-     correct for that repo + the "Q&A" discussion category. */
-  var GISCUS = {
-    repo: "Mir-Financial-Services/mir-website",
-    repoId: "R_kgDOUMUQxg",
-    category: "Q&A",
-    categoryId: "DIC_kwDOUMUQxs4DEwCR",
-    enabled: true   // set false to hide comments entirely
-  };
-
-  /* ---- 3. Opt-in form ------------------------------------------------- */
+  /* ---- 2. Opt-in form ------------------------------------------------- */
   var FORM_ENDPOINT = "https://formspree.io/f/moeqwdvl"; // shared with contact form; swap for a dedicated one if wanted
   var PROGRESS_KEY = "mir_course_progress_v1";
-  var OPTIN_KEY = "mir_course_optin_v1";
+  var OPTIN_KEY = "mir_course_optin_v1";     // unset | "done" (submitted) | "dismissed" (closed the popup)
+  var POPUP_DELAY_MS = 45000;                // popup appears after this long on the page
   var SPEEDS = [1, 1.25, 1.5, 2];
 
   /* -------------------------------------------------------------------- */
@@ -65,13 +53,19 @@
   var descEl = root.querySelector("#lesson-desc");
   var progressText = root.querySelector("#course-progress");
   var progressBar = root.querySelector("#course-bar > i");
-  var commentsMount = root.querySelector("#comments-mount");
 
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var player = null;        // YT.Player instance
   var apiReady = false;
   var pendingCue = null;    // lesson to load once API is ready
   var current = null;       // current lesson number
+
+  function optinState() {
+    try { return localStorage.getItem(OPTIN_KEY) || ""; } catch (e) { return ""; }
+  }
+  function setOptin(v) {
+    try { localStorage.setItem(OPTIN_KEY, v); } catch (e) {}
+  }
 
   /* ---- progress ---- */
   function getProgress() {
@@ -83,6 +77,7 @@
     try { localStorage.setItem(PROGRESS_KEY, JSON.stringify(p)); } catch (e) {}
     renderList();
     renderProgress();
+    maybeShowPopup();   // a finished lesson is a good moment to ask
   }
 
   function lessonByN(n) {
@@ -103,12 +98,10 @@
       btn.className = "lesson";
       if (l.n === current) btn.setAttribute("aria-current", "true");
       if (done.indexOf(l.n) !== -1) btn.classList.add("is-done");
-
       btn.innerHTML =
         '<span class="lesson__n">' + l.n + '</span>' +
         '<span class="lesson__title">' + escapeHtml(l.title) + '</span>' +
         '<span class="lesson__meta">' + escapeHtml(l.len) + '</span>';
-
       btn.addEventListener("click", function () { goToLesson(l.n, true); });
       listEl.appendChild(btn);
     });
@@ -126,7 +119,6 @@
     playerWrap.innerHTML = '<div id="course-player"></div>';
     player = null;
   }
-
   function buildPlayer(videoId) {
     clearPlayer();
     player = new YT.Player("course-player", {
@@ -141,22 +133,17 @@
       }
     });
   }
-
   function comingSoon() {
-    playerWrap.innerHTML = '<div class="gate"><div class="gate__inner">' +
+    playerWrap.innerHTML = '<div class="player__msg"><div>' +
       '<h3>Video coming soon</h3><p>This lesson has not been published yet.</p></div></div>';
   }
-
   function loadLesson(n, autoplay) {
     var l = lessonByN(n);
     if (!l) return;
     if (/^REPLACE/.test(l.yt)) { comingSoon(); return; }
     if (!apiReady) { pendingCue = { n: n, autoplay: autoplay }; return; }
-    if (!player) {
-      buildPlayer(l.yt);
-    } else {
-      autoplay ? player.loadVideoById(l.yt) : player.cueVideoById(l.yt);
-    }
+    if (!player) { buildPlayer(l.yt); }
+    else { autoplay ? player.loadVideoById(l.yt) : player.cueVideoById(l.yt); }
   }
 
   function goToLesson(n, userClick) {
@@ -168,14 +155,10 @@
       url.searchParams.set("lesson", String(n));
       history.replaceState(null, "", url);
     } catch (e) {}
-
     if (titleEl) titleEl.textContent = "Lesson " + n + ". " + l.title;
     if (descEl) descEl.textContent = l.desc;
-
     renderList();
     loadLesson(n, !!userClick);
-    mountGiscus(n);
-
     if (userClick && window.innerWidth < 940) {
       playerWrap.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
     }
@@ -213,17 +196,8 @@
     });
   }
 
-  /* ---- opt-in form (optional, never blocks anything) ---- */
-  function initOptin() {
-    var box = root.querySelector("#course-optin");
-    if (!box) return;
-    var form = box.querySelector("form");
-    var status = box.querySelector(".form-status");
-    var seen = false;
-    try { seen = localStorage.getItem(OPTIN_KEY) === "done"; } catch (e) {}
-    if (seen) { box.hidden = true; return; }
-    if (!form) return;
-
+  /* ---- opt-in (shared submit for inline card + popup) ---- */
+  function wireOptinForm(form, onSuccess) {
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       if (form._gotcha && form._gotcha.value) return;
@@ -237,44 +211,100 @@
       fetch(FORM_ENDPOINT, { method: "POST", body: data, headers: { Accept: "application/json" } })
         .then(function (res) {
           if (!res.ok) throw new Error("bad response");
-          try { localStorage.setItem(OPTIN_KEY, "done"); } catch (e) {}
-          box.innerHTML = '<p class="optin__done">Thanks. We will send our free bookkeeping and tax resources your way.</p>';
+          setOptin("done");
+          if (onSuccess) onSuccess();
         })
         .catch(function () {
           if (btn) { btn.disabled = false; btn.textContent = original; }
-          if (status) {
-            status.textContent = "Something went wrong. You can also email info@mirfinancialservices.com.";
-            status.className = "form-status is-visible form-status--err";
+          var s = form.querySelector(".form-status");
+          if (s) {
+            s.textContent = "Something went wrong. You can also email info@mirfinancialservices.com.";
+            s.className = "form-status is-visible form-status--err";
           }
         });
     });
   }
 
-  /* ---- giscus ---- */
-  function mountGiscus(n) {
-    if (!commentsMount) return;
-    if (!GISCUS.enabled || /YOUR_|REPLACE/.test(GISCUS.repoId)) {
-      commentsMount.innerHTML = '<p class="comments__note">Comments load once the giscus app is connected. See COURSE-SETUP.md.</p>';
-      return;
-    }
-    commentsMount.innerHTML = "";
-    var s = document.createElement("script");
-    s.src = "https://giscus.app/client.js";
-    s.setAttribute("data-repo", GISCUS.repo);
-    s.setAttribute("data-repo-id", GISCUS.repoId);
-    s.setAttribute("data-category", GISCUS.category);
-    s.setAttribute("data-category-id", GISCUS.categoryId);
-    s.setAttribute("data-mapping", "specific");
-    s.setAttribute("data-term", "course-lesson-" + n);
-    s.setAttribute("data-strict", "1");
-    s.setAttribute("data-reactions-enabled", "1");
-    s.setAttribute("data-emit-metadata", "0");
-    s.setAttribute("data-input-position", "top");
-    s.setAttribute("data-theme", "light");
-    s.setAttribute("data-lang", "en");
-    s.crossOrigin = "anonymous";
-    s.async = true;
-    commentsMount.appendChild(s);
+  function initInlineOptin() {
+    var box = root.querySelector("#course-optin");
+    if (!box) return;
+    if (optinState() === "done") { box.hidden = true; return; }
+    var form = box.querySelector("form");
+    if (!form) return;
+    wireOptinForm(form, function () {
+      box.innerHTML = '<p class="optin__done">Thanks. We will send our free bookkeeping and tax resources your way.</p>';
+      closePopup();
+    });
+  }
+
+  /* ---- one-time popup ---- */
+  var popupEl = null;
+  var popupTimer = null;
+  var popupShown = false;
+
+  function maybeShowPopup() {
+    if (popupShown || optinState()) return;   // already shown, submitted, or dismissed
+    showPopup();
+  }
+
+  function showPopup() {
+    if (popupEl || popupShown) return;
+    popupShown = true;
+    popupEl = document.createElement("div");
+    popupEl.className = "optin-modal";
+    popupEl.setAttribute("role", "dialog");
+    popupEl.setAttribute("aria-modal", "true");
+    popupEl.setAttribute("aria-label", "Free resources sign up");
+    popupEl.innerHTML =
+      '<div class="optin-modal__card">' +
+        '<button type="button" class="optin-modal__close" aria-label="Close">' +
+          '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>' +
+        '</button>' +
+        '<h3>Want to hear more about our free resources?</h3>' +
+        '<p>Checklists, guides, and short courses that help you manage your bookkeeping and tax. Optional, and we will not spam you.</p>' +
+        '<form novalidate>' +
+          '<input type="text" name="name" placeholder="Name" autocomplete="name" aria-label="Name">' +
+          '<input type="email" name="email" placeholder="Email" autocomplete="email" required aria-label="Email">' +
+          '<input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">' +
+          '<div class="form-status" aria-live="polite"></div>' +
+          '<button type="submit" class="btn btn--gold">Send them my way</button>' +
+          '<button type="button" class="optin-modal__later">No thanks</button>' +
+        '</form>' +
+      '</div>';
+    document.body.appendChild(popupEl);
+    document.body.style.overflow = "hidden";
+
+    var card = popupEl.querySelector(".optin-modal__card");
+    setTimeout(function () { if (popupEl) popupEl.classList.add("is-in"); }, 20);
+
+    popupEl.querySelector(".optin-modal__close").addEventListener("click", dismissPopup);
+    popupEl.querySelector(".optin-modal__later").addEventListener("click", dismissPopup);
+    popupEl.addEventListener("click", function (e) { if (e.target === popupEl) dismissPopup(); });
+    document.addEventListener("keydown", onEscape);
+    var firstField = card.querySelector('input[name="name"]');
+    if (firstField && !reduce) setTimeout(function () { firstField.focus(); }, 120);
+
+    wireOptinForm(card.querySelector("form"), function () {
+      card.innerHTML = '<p class="optin__done">Thanks. Check your inbox soon.</p>';
+      var inline = root.querySelector("#course-optin");
+      if (inline) inline.hidden = true;
+      setTimeout(closePopup, 1600);
+    });
+  }
+
+  function onEscape(e) { if (e.key === "Escape") dismissPopup(); }
+  function dismissPopup() {
+    if (optinState() !== "done") setOptin("dismissed");
+    closePopup();
+  }
+  function closePopup() {
+    if (popupTimer) { clearTimeout(popupTimer); popupTimer = null; }
+    document.removeEventListener("keydown", onEscape);
+    document.body.style.overflow = "";
+    if (!popupEl) return;
+    popupEl.classList.remove("is-in");
+    var el = popupEl; popupEl = null;
+    setTimeout(function () { if (el && el.parentNode) el.parentNode.removeChild(el); }, 250);
   }
 
   /* ---- utils ---- */
@@ -313,8 +343,12 @@
   if (blurb && !/^REPLACE/.test(COURSE.blurb)) blurb.textContent = COURSE.blurb;
 
   initSpeedBar();
-  initOptin();
+  initInlineOptin();
   renderList();
   renderProgress();
   startLesson();
+
+  if (!optinState()) {
+    popupTimer = setTimeout(maybeShowPopup, POPUP_DELAY_MS);
+  }
 })();
