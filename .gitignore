@@ -1,0 +1,17 @@
+# Local / OS
+desktop.ini
+.DS_Store
+Thumbs.db
+
+# Local preview + tooling (not needed on the live site)
+serve.ps1
+tools/
+.claude/
+
+# Internal notes — keep out of the public GitHub repo
+CONTENT-TODO.md
+README.md
+
+# Source material kept locally, not for the web
+Clinet Logoes/
+Logo High-res-white bg.png

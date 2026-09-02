@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /privacy.html
+Disallow: /terms.html
+Disallow: /404.html
+Disallow: /thank-you.html
+Disallow: /CONTENT-TODO.md
+Disallow: /README.md
+
+Sitemap: https://mirfinancialservices.com/sitemap.xml

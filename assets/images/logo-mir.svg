@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 372 96" role="img" aria-label="MIR Financial Services">
+  <rect x="2" y="2" width="214" height="66" fill="none" stroke="#233f87" stroke-width="4"/>
+  <rect x="12" y="12" width="194" height="46" fill="#233f87"/>
+  <text x="109" y="47" text-anchor="middle" dominant-baseline="middle"
+        font-family="'Arial Black','Helvetica Neue',Helvetica,Arial,sans-serif"
+        font-weight="900" font-size="42" letter-spacing="4" fill="#ffffff">MIR</text>
+  <text x="4" y="90"
+        font-family="'Arial Black','Helvetica Neue',Helvetica,Arial,sans-serif"
+        font-weight="700" font-size="16" letter-spacing="6.6" fill="#101f42">FINANCIAL SERVICES</text>
+</svg>
