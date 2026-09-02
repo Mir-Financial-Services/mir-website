@@ -969,9 +969,11 @@ p { text-wrap: pretty; }
 
 /* ---------- Course / video lessons ---------- */
 .course { display: grid; gap: clamp(1.5rem, 4vw, 2.75rem); align-items: start; }
+.course__main { order: -1; }            /* video first on mobile */
 @media (min-width: 940px) {
   .course { grid-template-columns: 320px minmax(0, 1fr); }
-  .course__aside { position: sticky; top: calc(var(--header-h) + 1rem); }
+  .course__main { order: 0; }
+  .course__aside { position: sticky; top: calc(var(--header-h) + 1rem); max-height: calc(100vh - var(--header-h) - 2rem); overflow-y: auto; }
 }
 
 .course__progress {
