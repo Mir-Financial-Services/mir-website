@@ -50,7 +50,7 @@
       <div class="container">
         <p class="breadcrumb"><a href="index.html">Home</a> / <a href="resources.html">Resources</a> / Course</p>
         <h1 id="course-title">Free Tax Course</h1>
-        <p class="lead measure" id="course-blurb">Plain-language video lessons on Canadian personal and small business tax. The first three lessons are open to everyone. The rest unlock with your name and email, no charge.</p>
+        <p class="lead measure" id="course-blurb">Plain-language video lessons on Canadian personal and small business tax. All eleven are free to watch, no sign-up.</p>
       </div>
     </section>
 
@@ -76,12 +76,27 @@
               <div id="course-player"></div>
             </div>
 
-            <div class="speed-bar" id="speed-bar" hidden></div>
+            <div class="speed-bar" id="speed-bar"></div>
 
             <div class="lesson-body">
               <h2 id="lesson-title">Lesson 1</h2>
               <p id="lesson-desc">Select a lesson to begin.</p>
             </div>
+
+            <aside class="optin" id="course-optin">
+              <div>
+                <h2 class="optin__title">Want to hear more about our free resources?</h2>
+                <p>Checklists, guides, and short courses that help you manage your bookkeeping and tax. Just let us know where we should send them. Optional.</p>
+              </div>
+              <form class="optin__form" novalidate>
+                <input type="text" name="name" placeholder="Name" autocomplete="name" aria-label="Name">
+                <input type="email" name="email" placeholder="Email" autocomplete="email" required aria-label="Email">
+                <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">
+                <button type="submit" class="btn btn--gold">Send them my way</button>
+                <div class="form-status" aria-live="polite"></div>
+                <p class="optin__fine">We store your details to send these resources, in line with our <a href="privacy.html">Privacy Policy</a>. Unsubscribe anytime.</p>
+              </form>
+            </aside>
 
             <section class="comments" aria-label="Questions and comments">
               <div class="comments__head">

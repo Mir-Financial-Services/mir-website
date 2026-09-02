@@ -1,11 +1,13 @@
 /* Mir Financial Services — course player
-   Vanilla JS. Drives the gated video course on course.html.
-   Video host: YouTube (IFrame Player API). Gate: client-side lead capture.
+   Vanilla JS. Drives the free video course on course.html.
+   Video host: YouTube (IFrame Player API).
    Comments: giscus (GitHub Discussions), one thread per lesson.
+   No gate: every lesson is open. A soft, optional opt-in form sits under
+   the player for people who want to hear about future resources.
 
    ============================================================
    1. FILL IN THE COURSE CONTENT BELOW
-   2. Set GISCUS_* once the giscus GitHub app is installed
+   2. Install the giscus GitHub app once (see COURSE-SETUP.md)
    3. FORM_ENDPOINT can stay as-is or point to a dedicated Formspree form
    ============================================================ */
 (function () {
@@ -13,34 +15,23 @@
 
   /* ---- 1. Course content ------------------------------------------------ */
   /* `yt` is the YouTube video id (the part after v= or youtu.be/).
-     First 3 lessons: free = true. Lessons 4+: free = false (gated).
-     Keep gated videos UNLISTED on YouTube so the link is not public. */
+     Leaving it as REPLACE_ID_x shows a "coming soon" panel for that lesson,
+     so you can publish lessons as you record them. */
   var COURSE = {
     title: "REPLACE: Course title",
     blurb: "REPLACE: one or two sentences on what this course covers and who it is for.",
     lessons: [
-      { n: 1,  yt: "REPLACE_ID_1",  title: "REPLACE: Lesson 1 title",  len: "0:00", free: true,
-        desc: "REPLACE: what this lesson covers." },
-      { n: 2,  yt: "REPLACE_ID_2",  title: "REPLACE: Lesson 2 title",  len: "0:00", free: true,
-        desc: "REPLACE: what this lesson covers." },
-      { n: 3,  yt: "REPLACE_ID_3",  title: "REPLACE: Lesson 3 title",  len: "0:00", free: true,
-        desc: "REPLACE: what this lesson covers." },
-      { n: 4,  yt: "REPLACE_ID_4",  title: "REPLACE: Lesson 4 title",  len: "0:00", free: false,
-        desc: "REPLACE: what this lesson covers." },
-      { n: 5,  yt: "REPLACE_ID_5",  title: "REPLACE: Lesson 5 title",  len: "0:00", free: false,
-        desc: "REPLACE: what this lesson covers." },
-      { n: 6,  yt: "REPLACE_ID_6",  title: "REPLACE: Lesson 6 title",  len: "0:00", free: false,
-        desc: "REPLACE: what this lesson covers." },
-      { n: 7,  yt: "REPLACE_ID_7",  title: "REPLACE: Lesson 7 title",  len: "0:00", free: false,
-        desc: "REPLACE: what this lesson covers." },
-      { n: 8,  yt: "REPLACE_ID_8",  title: "REPLACE: Lesson 8 title",  len: "0:00", free: false,
-        desc: "REPLACE: what this lesson covers." },
-      { n: 9,  yt: "REPLACE_ID_9",  title: "REPLACE: Lesson 9 title",  len: "0:00", free: false,
-        desc: "REPLACE: what this lesson covers." },
-      { n: 10, yt: "REPLACE_ID_10", title: "REPLACE: Lesson 10 title", len: "0:00", free: false,
-        desc: "REPLACE: what this lesson covers." },
-      { n: 11, yt: "REPLACE_ID_11", title: "REPLACE: Lesson 11 title", len: "0:00", free: false,
-        desc: "REPLACE: what this lesson covers." }
+      { n: 1,  yt: "REPLACE_ID_1",  title: "REPLACE: Lesson 1 title",  len: "0:00", desc: "REPLACE: what this lesson covers." },
+      { n: 2,  yt: "REPLACE_ID_2",  title: "REPLACE: Lesson 2 title",  len: "0:00", desc: "REPLACE: what this lesson covers." },
+      { n: 3,  yt: "REPLACE_ID_3",  title: "REPLACE: Lesson 3 title",  len: "0:00", desc: "REPLACE: what this lesson covers." },
+      { n: 4,  yt: "REPLACE_ID_4",  title: "REPLACE: Lesson 4 title",  len: "0:00", desc: "REPLACE: what this lesson covers." },
+      { n: 5,  yt: "REPLACE_ID_5",  title: "REPLACE: Lesson 5 title",  len: "0:00", desc: "REPLACE: what this lesson covers." },
+      { n: 6,  yt: "REPLACE_ID_6",  title: "REPLACE: Lesson 6 title",  len: "0:00", desc: "REPLACE: what this lesson covers." },
+      { n: 7,  yt: "REPLACE_ID_7",  title: "REPLACE: Lesson 7 title",  len: "0:00", desc: "REPLACE: what this lesson covers." },
+      { n: 8,  yt: "REPLACE_ID_8",  title: "REPLACE: Lesson 8 title",  len: "0:00", desc: "REPLACE: what this lesson covers." },
+      { n: 9,  yt: "REPLACE_ID_9",  title: "REPLACE: Lesson 9 title",  len: "0:00", desc: "REPLACE: what this lesson covers." },
+      { n: 10, yt: "REPLACE_ID_10", title: "REPLACE: Lesson 10 title", len: "0:00", desc: "REPLACE: what this lesson covers." },
+      { n: 11, yt: "REPLACE_ID_11", title: "REPLACE: Lesson 11 title", len: "0:00", desc: "REPLACE: what this lesson covers." }
     ]
   };
 
@@ -56,10 +47,10 @@
     enabled: true   // set false to hide comments entirely
   };
 
-  /* ---- 3. Lead-capture form ------------------------------------------- */
+  /* ---- 3. Opt-in form ------------------------------------------------- */
   var FORM_ENDPOINT = "https://formspree.io/f/moeqwdvl"; // shared with contact form; swap for a dedicated one if wanted
-  var ACCESS_KEY = "mir_course_access_v1";
   var PROGRESS_KEY = "mir_course_progress_v1";
+  var OPTIN_KEY = "mir_course_optin_v1";
   var SPEEDS = [1, 1.25, 1.5, 2];
 
   /* -------------------------------------------------------------------- */
@@ -82,13 +73,7 @@
   var pendingCue = null;    // lesson to load once API is ready
   var current = null;       // current lesson number
 
-  /* ---- storage helpers ---- */
-  function hasAccess() {
-    try { return localStorage.getItem(ACCESS_KEY) === "yes"; } catch (e) { return false; }
-  }
-  function grantAccess() {
-    try { localStorage.setItem(ACCESS_KEY, "yes"); } catch (e) {}
-  }
+  /* ---- progress ---- */
   function getProgress() {
     try { return JSON.parse(localStorage.getItem(PROGRESS_KEY)) || []; } catch (e) { return []; }
   }
@@ -106,7 +91,6 @@
     }
     return null;
   }
-  function isLocked(lesson) { return !lesson.free && !hasAccess(); }
 
   /* ---- lesson list ---- */
   function renderList() {
@@ -119,19 +103,11 @@
       btn.className = "lesson";
       if (l.n === current) btn.setAttribute("aria-current", "true");
       if (done.indexOf(l.n) !== -1) btn.classList.add("is-done");
-      if (isLocked(l)) btn.classList.add("is-locked");
-
-      var tag = l.free
-        ? '<span class="lesson__tag">Free</span>'
-        : (isLocked(l)
-            ? '<svg class="lesson__icon-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>'
-            : '<span class="lesson__meta">' + l.len + '</span>');
 
       btn.innerHTML =
         '<span class="lesson__n">' + l.n + '</span>' +
-        '<span><span class="lesson__title">' + escapeHtml(l.title) + '</span>' +
-        (l.free ? ' <span class="lesson__meta">' + l.len + '</span>' : '') + '</span>' +
-        '<span>' + tag + '</span>';
+        '<span class="lesson__title">' + escapeHtml(l.title) + '</span>' +
+        '<span class="lesson__meta">' + escapeHtml(l.len) + '</span>';
 
       btn.addEventListener("click", function () { goToLesson(l.n, true); });
       listEl.appendChild(btn);
@@ -145,57 +121,8 @@
     if (progressBar) progressBar.style.width = (total ? (doneCount / total) * 100 : 0) + "%";
   }
 
-  /* ---- gate ---- */
-  function showGate() {
-    clearPlayer();
-    var g = document.createElement("div");
-    g.className = "gate";
-    g.innerHTML =
-      '<div class="gate__inner">' +
-        '<svg class="gate__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>' +
-        '<h3>Keep watching, free</h3>' +
-        '<p>Lessons 4 to ' + COURSE.lessons.length + ' unlock instantly. Just tell us where to send updates. No spam.</p>' +
-        '<form novalidate>' +
-          '<input type="text" name="name" placeholder="Your name" autocomplete="name" required>' +
-          '<input type="email" name="email" placeholder="Your email" autocomplete="email" required>' +
-          '<input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">' +
-          '<div class="form-status" aria-live="polite"></div>' +
-          '<button type="submit" class="btn btn--gold">Unlock the rest of the course</button>' +
-          '<p class="gate__fine">We store your name and email to send course updates, in line with our <a href="privacy.html">Privacy Policy</a>. Unsubscribe anytime.</p>' +
-        '</form>' +
-      '</div>';
-    playerWrap.appendChild(g);
-
-    var form = g.querySelector("form");
-    var status = g.querySelector(".form-status");
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      if (form._gotcha && form._gotcha.value) return;         // bot
-      if (!form.reportValidity()) return;
-      var btn = form.querySelector("button");
-      btn.disabled = true; btn.textContent = "Unlocking…";
-      var data = new FormData(form);
-      data.append("_subject", "Tax course access: " + (data.get("name") || "new viewer"));
-      data.append("source", "Tax course (" + COURSE.title + ")");
-      fetch(FORM_ENDPOINT, { method: "POST", body: data, headers: { Accept: "application/json" } })
-        .then(function (res) {
-          if (!res.ok) throw new Error("bad response");
-          grantAccess();
-          goToLesson(current, true);   // re-render everything, replace gate with the video
-        })
-        .catch(function () {
-          btn.disabled = false; btn.textContent = "Unlock the rest of the course";
-          if (status) {
-            status.textContent = "Something went wrong. Email info@mirfinancialservices.com and we'll send you the link.";
-            status.className = "form-status is-visible form-status--err";
-          }
-        });
-    });
-  }
-
   /* ---- player ---- */
   function clearPlayer() {
-    // remove gate + any existing iframe, restore the mount div
     playerWrap.innerHTML = '<div id="course-player"></div>';
     player = null;
   }
@@ -215,15 +142,15 @@
     });
   }
 
+  function comingSoon() {
+    playerWrap.innerHTML = '<div class="gate"><div class="gate__inner">' +
+      '<h3>Video coming soon</h3><p>This lesson has not been published yet.</p></div></div>';
+  }
+
   function loadLesson(n, autoplay) {
     var l = lessonByN(n);
     if (!l) return;
-    if (isLocked(l)) { showGate(); return; }
-    if (/^REPLACE/.test(l.yt)) {
-      playerWrap.innerHTML = '<div class="gate"><div class="gate__inner">' +
-        '<h3>Video coming soon</h3><p>This lesson has not been published yet.</p></div></div>';
-      return;
-    }
+    if (/^REPLACE/.test(l.yt)) { comingSoon(); return; }
     if (!apiReady) { pendingCue = { n: n, autoplay: autoplay }; return; }
     if (!player) {
       buildPlayer(l.yt);
@@ -236,7 +163,6 @@
     var l = lessonByN(n);
     if (!l) return;
     current = n;
-    // update URL so the lesson is shareable / refresh-safe
     try {
       var url = new URL(window.location.href);
       url.searchParams.set("lesson", String(n));
@@ -245,7 +171,6 @@
 
     if (titleEl) titleEl.textContent = "Lesson " + n + ". " + l.title;
     if (descEl) descEl.textContent = l.desc;
-    if (speedBar) speedBar.hidden = isLocked(l);
 
     renderList();
     loadLesson(n, !!userClick);
@@ -288,11 +213,48 @@
     });
   }
 
+  /* ---- opt-in form (optional, never blocks anything) ---- */
+  function initOptin() {
+    var box = root.querySelector("#course-optin");
+    if (!box) return;
+    var form = box.querySelector("form");
+    var status = box.querySelector(".form-status");
+    var seen = false;
+    try { seen = localStorage.getItem(OPTIN_KEY) === "done"; } catch (e) {}
+    if (seen) { box.hidden = true; return; }
+    if (!form) return;
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (form._gotcha && form._gotcha.value) return;
+      if (!form.reportValidity()) return;
+      var btn = form.querySelector("button[type=submit]");
+      var original = btn ? btn.textContent : "";
+      if (btn) { btn.disabled = true; btn.textContent = "Sending…"; }
+      var data = new FormData(form);
+      data.append("_subject", "Course resources opt-in");
+      data.append("source", "Tax course opt-in");
+      fetch(FORM_ENDPOINT, { method: "POST", body: data, headers: { Accept: "application/json" } })
+        .then(function (res) {
+          if (!res.ok) throw new Error("bad response");
+          try { localStorage.setItem(OPTIN_KEY, "done"); } catch (e) {}
+          box.innerHTML = '<p class="optin__done">Thanks. We will send our free bookkeeping and tax resources your way.</p>';
+        })
+        .catch(function () {
+          if (btn) { btn.disabled = false; btn.textContent = original; }
+          if (status) {
+            status.textContent = "Something went wrong. You can also email info@mirfinancialservices.com.";
+            status.className = "form-status is-visible form-status--err";
+          }
+        });
+    });
+  }
+
   /* ---- giscus ---- */
   function mountGiscus(n) {
     if (!commentsMount) return;
     if (!GISCUS.enabled || /YOUR_|REPLACE/.test(GISCUS.repoId)) {
-      commentsMount.innerHTML = '<p class="comments__note">Comments load once the giscus app is connected. See README.</p>';
+      commentsMount.innerHTML = '<p class="comments__note">Comments load once the giscus app is connected. See COURSE-SETUP.md.</p>';
       return;
     }
     commentsMount.innerHTML = "";
@@ -351,6 +313,7 @@
   if (blurb && !/^REPLACE/.test(COURSE.blurb)) blurb.textContent = COURSE.blurb;
 
   initSpeedBar();
+  initOptin();
   renderList();
   renderProgress();
   startLesson();
