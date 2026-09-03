@@ -15,22 +15,36 @@
   /* ---- 1. Course content ------------------------------------------------ */
   /* `yt` is the YouTube video id (the part after v= or youtu.be/).
      Leaving it as REPLACE_ID_x shows a "coming soon" panel for that lesson,
-     so you can publish lessons as you record them. */
+     so you can publish lessons as you record them.
+     The lesson titles and descriptions below are a starting curriculum for a
+     QuickBooks Online course in Farsi. Rewrite them (in English or Farsi) to
+     match your videos. `len` is display only, e.g. "8:30". */
   var COURSE = {
-    title: "REPLACE: Course title",
-    blurb: "REPLACE: one or two sentences on what this course covers and who it is for.",
+    title: "Do your own bookkeeping in QuickBooks Online",
+    blurb: "A free video course, in Farsi, for business owners who want to keep their own books. Eleven short lessons that walk you through QuickBooks Online, from setup to month end.",
     lessons: [
-      { n: 1,  yt: "REPLACE_ID_1",  title: "REPLACE: Lesson 1 title",  len: "0:00", desc: "REPLACE: what this lesson covers." },
-      { n: 2,  yt: "REPLACE_ID_2",  title: "REPLACE: Lesson 2 title",  len: "0:00", desc: "REPLACE: what this lesson covers." },
-      { n: 3,  yt: "REPLACE_ID_3",  title: "REPLACE: Lesson 3 title",  len: "0:00", desc: "REPLACE: what this lesson covers." },
-      { n: 4,  yt: "REPLACE_ID_4",  title: "REPLACE: Lesson 4 title",  len: "0:00", desc: "REPLACE: what this lesson covers." },
-      { n: 5,  yt: "REPLACE_ID_5",  title: "REPLACE: Lesson 5 title",  len: "0:00", desc: "REPLACE: what this lesson covers." },
-      { n: 6,  yt: "REPLACE_ID_6",  title: "REPLACE: Lesson 6 title",  len: "0:00", desc: "REPLACE: what this lesson covers." },
-      { n: 7,  yt: "REPLACE_ID_7",  title: "REPLACE: Lesson 7 title",  len: "0:00", desc: "REPLACE: what this lesson covers." },
-      { n: 8,  yt: "REPLACE_ID_8",  title: "REPLACE: Lesson 8 title",  len: "0:00", desc: "REPLACE: what this lesson covers." },
-      { n: 9,  yt: "REPLACE_ID_9",  title: "REPLACE: Lesson 9 title",  len: "0:00", desc: "REPLACE: what this lesson covers." },
-      { n: 10, yt: "REPLACE_ID_10", title: "REPLACE: Lesson 10 title", len: "0:00", desc: "REPLACE: what this lesson covers." },
-      { n: 11, yt: "REPLACE_ID_11", title: "REPLACE: Lesson 11 title", len: "0:00", desc: "REPLACE: what this lesson covers." }
+      { n: 1,  yt: "REPLACE_ID_1",  title: "Setting up QuickBooks Online for your business", len: "0:00",
+        desc: "Choosing a plan, company settings, sales tax, and getting your file ready." },
+      { n: 2,  yt: "REPLACE_ID_2",  title: "The chart of accounts, explained simply", len: "0:00",
+        desc: "What the accounts mean and how to keep the list short and useful." },
+      { n: 3,  yt: "REPLACE_ID_3",  title: "Connecting your bank and credit cards", len: "0:00",
+        desc: "Linking accounts, importing history, and what the bank feed does." },
+      { n: 4,  yt: "REPLACE_ID_4",  title: "Recording sales and income", len: "0:00",
+        desc: "Invoices, sales receipts, and matching customer payments." },
+      { n: 5,  yt: "REPLACE_ID_5",  title: "Recording expenses and bills", len: "0:00",
+        desc: "Entering expenses, bills, and paying suppliers." },
+      { n: 6,  yt: "REPLACE_ID_6",  title: "Categorizing bank feed transactions", len: "0:00",
+        desc: "Working the For Review tab, bank rules, and splitting transactions." },
+      { n: 7,  yt: "REPLACE_ID_7",  title: "Reconciling your accounts", len: "0:00",
+        desc: "Matching QuickBooks to your bank statement every month." },
+      { n: 8,  yt: "REPLACE_ID_8",  title: "GST and HST in QuickBooks Online", len: "0:00",
+        desc: "Setting up sales tax, tracking it, and preparing your return." },
+      { n: 9,  yt: "REPLACE_ID_9",  title: "Payroll basics", len: "0:00",
+        desc: "Adding employees, running a pay run, and remittances." },
+      { n: 10, yt: "REPLACE_ID_10", title: "Month end: what to check before you close", len: "0:00",
+        desc: "A short checklist to trust your numbers each month." },
+      { n: 11, yt: "REPLACE_ID_11", title: "Reading your reports", len: "0:00",
+        desc: "The profit and loss and the balance sheet, in plain language." }
     ]
   };
 
