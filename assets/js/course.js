@@ -17,6 +17,7 @@
      Leaving it as REPLACE_ID_x shows a "coming soon" panel for that lesson,
      so you can publish lessons as you record them.
      `len` is display only ("8:30"); leave it "" to hide it.
+     `desc` is kept for reference but is NOT shown on the page anymore.
      The videos are in Farsi; the page text is English (set COURSE.dir to "rtl"
      for a full right to left version). */
   var COURSE = {
@@ -65,7 +66,6 @@
   var playerWrap = root.querySelector("#player-wrap");
   var speedBar = root.querySelector("#speed-bar");
   var titleEl = root.querySelector("#lesson-title");
-  var descEl = root.querySelector("#lesson-desc");
   var progressText = root.querySelector("#course-progress");
   var progressBar = root.querySelector("#course-bar > i");
 
@@ -187,10 +187,6 @@
     if (titleEl) {
       titleEl.textContent = RTL ? ("درس " + faNum(n) + ": " + l.title) : ("Lesson " + n + ". " + l.title);
       if (RTL) titleEl.dir = "rtl";
-    }
-    if (descEl) {
-      descEl.textContent = l.desc;
-      if (RTL) descEl.dir = "rtl";
     }
     renderList();
     loadLesson(n, !!userClick);
