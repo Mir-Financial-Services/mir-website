@@ -16,36 +16,36 @@
   /* `yt` is the YouTube video id (the part after v= or youtu.be/).
      Leaving it as REPLACE_ID_x shows a "coming soon" panel for that lesson,
      so you can publish lessons as you record them.
-     Titles and descriptions are in Farsi. `len` is display only ("8:30"); leave
-     it "" to hide it. `dir` is "rtl" so the lesson list and lesson text read
-     right to left. */
+     `len` is display only ("8:30"); leave it "" to hide it.
+     The videos are in Farsi; the page text is English (set COURSE.dir to "rtl"
+     for a full right to left version). */
   var COURSE = {
-    dir: "rtl",
+    dir: "ltr",
     title: "Do your own bookkeeping in QuickBooks Online",
     blurb: "A free video course, in Farsi, for business owners who want to keep their own books. Eleven short lessons that walk you through QuickBooks Online, from setup to month end.",
     lessons: [
-      { n: 1,  yt: "PPDKBptDfPU", len: "", title: "مقدمه و معرفی دوره",
-        desc: "این دوره چه چیزی را پوشش می‌دهد و برای چه کسانی مناسب است." },
-      { n: 2,  yt: "2av1WAqkIwc", len: "", title: "ورود اطلاعات اولیه شرکت",
-        desc: "تنظیمات اولیه شرکت و آماده‌سازی فایل در کوئیک‌بوکس." },
-      { n: 3,  yt: "MZ5IwbcPUHE", len: "", title: "ساخت کدهای HST",
-        desc: "تنظیم مالیات فروش و ساخت کدهای HST." },
-      { n: 4,  yt: "OY-uyTG2VU4", len: "", title: "ساخت پروفایل مشتری",
-        desc: "افزودن مشتری و ثبت اطلاعات او." },
-      { n: 5,  yt: "IidMCqNFVSQ", len: "", title: "ساخت اینویس برای مشتری",
-        desc: "صدور صورت‌حساب (اینویس) و ثبت دریافت وجه از مشتری." },
-      { n: 6,  yt: "ForpgdaHHFA", len: "", title: "طبقه‌بندی تراکنش‌های بانکی",
-        desc: "دسته‌بندی تراکنش‌ها در بخش For Review." },
-      { n: 7,  yt: "o0EAlBQaihM", len: "", title: "مغایرت‌گیری بانکی (Bank Reconciliation)",
-        desc: "تطبیق کوئیک‌بوکس با صورت‌حساب بانک در پایان هر ماه." },
-      { n: 8,  yt: "YP7BUVWUW3g", len: "", title: "مرور صورت‌های مالی ماه اول",
-        desc: "نگاهی به سود و زیان و ترازنامه پس از اولین ماه." },
-      { n: 9,  yt: "Fx0yMlJFy34", len: "", title: "قوانین (Rules)",
-        desc: "ساخت Rule برای خودکار کردن دسته‌بندی تراکنش‌ها." },
-      { n: 10, yt: "dUEVzyGsSE0", len: "", title: "مرور صورت‌های مالی سه‌ماهه اول",
-        desc: "بررسی گزارش‌های مالی در پایان سه ماه نخست." },
-      { n: 11, yt: "0zvI5wYIPc4", len: "", title: "پایان دوره مقدماتی",
-        desc: "جمع‌بندی دوره مقدماتی و گام‌های بعدی." }
+      { n: 1,  yt: "PPDKBptDfPU", len: "", title: "Introduction and course overview",
+        desc: "What this course covers and who it is for." },
+      { n: 2,  yt: "2av1WAqkIwc", len: "", title: "Entering your company's initial information",
+        desc: "Company settings and getting your QuickBooks file ready." },
+      { n: 3,  yt: "MZ5IwbcPUHE", len: "", title: "Setting up HST codes",
+        desc: "Configuring sales tax and creating your HST codes." },
+      { n: 4,  yt: "OY-uyTG2VU4", len: "", title: "Creating a customer profile",
+        desc: "Adding a customer and recording their details." },
+      { n: 5,  yt: "IidMCqNFVSQ", len: "", title: "Creating an invoice for a customer",
+        desc: "Issuing an invoice and recording the payment received." },
+      { n: 6,  yt: "ForpgdaHHFA", len: "", title: "Categorizing bank transactions",
+        desc: "Working the For Review tab and sorting transactions." },
+      { n: 7,  yt: "o0EAlBQaihM", len: "", title: "Bank reconciliation",
+        desc: "Matching QuickBooks to your bank statement each month." },
+      { n: 8,  yt: "YP7BUVWUW3g", len: "", title: "Reviewing the first month's financial statements",
+        desc: "A look at the profit and loss and the balance sheet after month one." },
+      { n: 9,  yt: "Fx0yMlJFy34", len: "", title: "Rules",
+        desc: "Creating rules to categorize transactions automatically." },
+      { n: 10, yt: "dUEVzyGsSE0", len: "", title: "Reviewing the first quarter's financial statements",
+        desc: "Checking the reports after the first three months." },
+      { n: 11, yt: "0zvI5wYIPc4", len: "", title: "End of the introductory course",
+        desc: "Wrapping up the introductory course and what comes next." }
     ]
   };
 
