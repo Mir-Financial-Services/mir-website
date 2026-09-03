@@ -16,35 +16,36 @@
   /* `yt` is the YouTube video id (the part after v= or youtu.be/).
      Leaving it as REPLACE_ID_x shows a "coming soon" panel for that lesson,
      so you can publish lessons as you record them.
-     The lesson titles and descriptions below are a starting curriculum for a
-     QuickBooks Online course in Farsi. Rewrite them (in English or Farsi) to
-     match your videos. `len` is display only, e.g. "8:30". */
+     Titles and descriptions are in Farsi. `len` is display only ("8:30"); leave
+     it "" to hide it. `dir` is "rtl" so the lesson list and lesson text read
+     right to left. */
   var COURSE = {
+    dir: "rtl",
     title: "Do your own bookkeeping in QuickBooks Online",
     blurb: "A free video course, in Farsi, for business owners who want to keep their own books. Eleven short lessons that walk you through QuickBooks Online, from setup to month end.",
     lessons: [
-      { n: 1,  yt: "REPLACE_ID_1",  title: "Setting up QuickBooks Online for your business", len: "0:00",
-        desc: "Choosing a plan, company settings, sales tax, and getting your file ready." },
-      { n: 2,  yt: "REPLACE_ID_2",  title: "The chart of accounts, explained simply", len: "0:00",
-        desc: "What the accounts mean and how to keep the list short and useful." },
-      { n: 3,  yt: "REPLACE_ID_3",  title: "Connecting your bank and credit cards", len: "0:00",
-        desc: "Linking accounts, importing history, and what the bank feed does." },
-      { n: 4,  yt: "REPLACE_ID_4",  title: "Recording sales and income", len: "0:00",
-        desc: "Invoices, sales receipts, and matching customer payments." },
-      { n: 5,  yt: "REPLACE_ID_5",  title: "Recording expenses and bills", len: "0:00",
-        desc: "Entering expenses, bills, and paying suppliers." },
-      { n: 6,  yt: "REPLACE_ID_6",  title: "Categorizing bank feed transactions", len: "0:00",
-        desc: "Working the For Review tab, bank rules, and splitting transactions." },
-      { n: 7,  yt: "REPLACE_ID_7",  title: "Reconciling your accounts", len: "0:00",
-        desc: "Matching QuickBooks to your bank statement every month." },
-      { n: 8,  yt: "REPLACE_ID_8",  title: "GST and HST in QuickBooks Online", len: "0:00",
-        desc: "Setting up sales tax, tracking it, and preparing your return." },
-      { n: 9,  yt: "REPLACE_ID_9",  title: "Payroll basics", len: "0:00",
-        desc: "Adding employees, running a pay run, and remittances." },
-      { n: 10, yt: "REPLACE_ID_10", title: "Month end: what to check before you close", len: "0:00",
-        desc: "A short checklist to trust your numbers each month." },
-      { n: 11, yt: "REPLACE_ID_11", title: "Reading your reports", len: "0:00",
-        desc: "The profit and loss and the balance sheet, in plain language." }
+      { n: 1,  yt: "PPDKBptDfPU", len: "", title: "مقدمه و معرفی دوره",
+        desc: "این دوره چه چیزی را پوشش می‌دهد و برای چه کسانی مناسب است." },
+      { n: 2,  yt: "2av1WAqkIwc", len: "", title: "ورود اطلاعات اولیه شرکت",
+        desc: "تنظیمات اولیه شرکت و آماده‌سازی فایل در کوئیک‌بوکس." },
+      { n: 3,  yt: "MZ5IwbcPUHE", len: "", title: "ساخت کدهای HST",
+        desc: "تنظیم مالیات فروش و ساخت کدهای HST." },
+      { n: 4,  yt: "OY-uyTG2VU4", len: "", title: "ساخت پروفایل مشتری",
+        desc: "افزودن مشتری و ثبت اطلاعات او." },
+      { n: 5,  yt: "IidMCqNFVSQ", len: "", title: "ساخت اینویس برای مشتری",
+        desc: "صدور صورت‌حساب (اینویس) و ثبت دریافت وجه از مشتری." },
+      { n: 6,  yt: "ForpgdaHHFA", len: "", title: "طبقه‌بندی تراکنش‌های بانکی",
+        desc: "دسته‌بندی تراکنش‌ها در بخش For Review." },
+      { n: 7,  yt: "o0EAlBQaihM", len: "", title: "مغایرت‌گیری بانکی (Bank Reconciliation)",
+        desc: "تطبیق کوئیک‌بوکس با صورت‌حساب بانک در پایان هر ماه." },
+      { n: 8,  yt: "YP7BUVWUW3g", len: "", title: "مرور صورت‌های مالی ماه اول",
+        desc: "نگاهی به سود و زیان و ترازنامه پس از اولین ماه." },
+      { n: 9,  yt: "Fx0yMlJFy34", len: "", title: "قوانین (Rules)",
+        desc: "ساخت Rule برای خودکار کردن دسته‌بندی تراکنش‌ها." },
+      { n: 10, yt: "dUEVzyGsSE0", len: "", title: "مرور صورت‌های مالی سه‌ماهه اول",
+        desc: "بررسی گزارش‌های مالی در پایان سه ماه نخست." },
+      { n: 11, yt: "0zvI5wYIPc4", len: "", title: "پایان دوره مقدماتی",
+        desc: "جمع‌بندی دوره مقدماتی و گام‌های بعدی." }
     ]
   };
 
@@ -101,6 +102,11 @@
     return null;
   }
 
+  var RTL = COURSE.dir === "rtl";
+  function faNum(x) {
+    return RTL ? String(x).replace(/\d/g, function (d) { return "۰۱۲۳۴۵۶۷۸۹".charAt(+d); }) : String(x);
+  }
+
   /* ---- lesson list ---- */
   function renderList() {
     if (!listEl) return;
@@ -110,12 +116,13 @@
       var btn = document.createElement("button");
       btn.type = "button";
       btn.className = "lesson";
+      if (RTL) btn.dir = "rtl";
       if (l.n === current) btn.setAttribute("aria-current", "true");
       if (done.indexOf(l.n) !== -1) btn.classList.add("is-done");
       btn.innerHTML =
-        '<span class="lesson__n">' + l.n + '</span>' +
+        '<span class="lesson__n">' + faNum(l.n) + '</span>' +
         '<span class="lesson__title">' + escapeHtml(l.title) + '</span>' +
-        '<span class="lesson__meta">' + escapeHtml(l.len) + '</span>';
+        '<span class="lesson__meta">' + escapeHtml(l.len || "") + '</span>';
       btn.addEventListener("click", function () { goToLesson(l.n, true); });
       listEl.appendChild(btn);
     });
@@ -124,7 +131,12 @@
   function renderProgress() {
     var doneCount = getProgress().length;
     var total = COURSE.lessons.length;
-    if (progressText) progressText.textContent = doneCount + " of " + total + " lessons watched";
+    if (progressText) {
+      progressText.textContent = RTL
+        ? faNum(doneCount) + " از " + faNum(total) + " درس تماشا شده"
+        : doneCount + " of " + total + " lessons watched";
+      if (RTL) progressText.dir = "rtl";
+    }
     if (progressBar) progressBar.style.width = (total ? (doneCount / total) * 100 : 0) + "%";
   }
 
@@ -148,8 +160,11 @@
     });
   }
   function comingSoon() {
-    playerWrap.innerHTML = '<div class="player__msg"><div>' +
-      '<h3>Video coming soon</h3><p>This lesson has not been published yet.</p></div></div>';
+    playerWrap.innerHTML = '<div class="player__msg"><div dir="' + (RTL ? "rtl" : "ltr") + '">' +
+      (RTL
+        ? '<h3>ویدیوی این درس به‌زودی</h3><p>این درس هنوز منتشر نشده است.</p>'
+        : '<h3>Video coming soon</h3><p>This lesson has not been published yet.</p>') +
+      '</div></div>';
   }
   function loadLesson(n, autoplay) {
     var l = lessonByN(n);
@@ -169,8 +184,14 @@
       url.searchParams.set("lesson", String(n));
       history.replaceState(null, "", url);
     } catch (e) {}
-    if (titleEl) titleEl.textContent = "Lesson " + n + ". " + l.title;
-    if (descEl) descEl.textContent = l.desc;
+    if (titleEl) {
+      titleEl.textContent = RTL ? ("درس " + faNum(n) + ": " + l.title) : ("Lesson " + n + ". " + l.title);
+      if (RTL) titleEl.dir = "rtl";
+    }
+    if (descEl) {
+      descEl.textContent = l.desc;
+      if (RTL) descEl.dir = "rtl";
+    }
     renderList();
     loadLesson(n, !!userClick);
     if (userClick && window.innerWidth < 940) {
@@ -192,13 +213,14 @@
   }
   function initSpeedBar() {
     if (!speedBar) return;
-    speedBar.innerHTML = '<span class="speed-bar__label">Speed</span>';
+    if (RTL) speedBar.dir = "rtl";
+    speedBar.innerHTML = '<span class="speed-bar__label">' + (RTL ? "سرعت پخش" : "Speed") + '</span>';
     SPEEDS.forEach(function (r) {
       var b = document.createElement("button");
       b.type = "button";
       b.className = "speed-btn";
       b.dataset.rate = String(r);
-      b.textContent = (r === 1 ? "Normal" : r + "×");
+      b.textContent = (r === 1 ? (RTL ? "عادی" : "Normal") : r + "×");
       b.setAttribute("aria-pressed", String(r === 1));
       b.addEventListener("click", function () {
         if (player && player.setPlaybackRate) {
@@ -232,7 +254,9 @@
           if (btn) { btn.disabled = false; btn.textContent = original; }
           var s = form.querySelector(".form-status");
           if (s) {
-            s.textContent = "Something went wrong. You can also email info@mirfinancialservices.com.";
+            s.textContent = RTL
+              ? "مشکلی پیش آمد. می‌توانید به info@mirfinancialservices.com ایمیل بزنید."
+              : "Something went wrong. You can also email info@mirfinancialservices.com.";
             s.className = "form-status is-visible form-status--err";
           }
         });
@@ -246,7 +270,8 @@
     var form = box.querySelector("form");
     if (!form) return;
     wireOptinForm(form, function () {
-      box.innerHTML = '<p class="optin__done">Thanks. We will send our free bookkeeping and tax resources your way.</p>';
+      box.innerHTML = '<p class="optin__done" dir="' + (RTL ? "rtl" : "ltr") + '">' +
+        (RTL ? "ممنون. منابع رایگان حسابداری و مالیات را برایتان می‌فرستیم." : "Thanks. We will send our free bookkeeping and tax resources your way.") + '</p>';
       closePopup();
     });
   }
@@ -268,21 +293,32 @@
     popupEl.className = "optin-modal";
     popupEl.setAttribute("role", "dialog");
     popupEl.setAttribute("aria-modal", "true");
-    popupEl.setAttribute("aria-label", "Free resources sign up");
+    popupEl.setAttribute("aria-label", RTL ? "ثبت‌نام برای منابع رایگان" : "Free resources sign up");
+    var L = RTL ? {
+      close: "بستن",
+      h: "می‌خواهید از منابع رایگان دیگر ما باخبر شوید؟",
+      p: "چک‌لیست‌ها، راهنماها و دوره‌های کوتاه درباره حسابداری و مالیات کسب‌وکار. اختیاری، و اسپم نمی‌فرستیم.",
+      name: "نام", email: "ایمیل", send: "برایم بفرستید", later: "نه، ممنون"
+    } : {
+      close: "Close",
+      h: "Want to hear more about our free resources?",
+      p: "Checklists, guides, and short courses that help you manage your bookkeeping and tax. Optional, and we will not spam you.",
+      name: "Name", email: "Email", send: "Send them my way", later: "No thanks"
+    };
     popupEl.innerHTML =
-      '<div class="optin-modal__card">' +
-        '<button type="button" class="optin-modal__close" aria-label="Close">' +
+      '<div class="optin-modal__card" dir="' + (RTL ? "rtl" : "ltr") + '">' +
+        '<button type="button" class="optin-modal__close" aria-label="' + L.close + '">' +
           '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>' +
         '</button>' +
-        '<h3>Want to hear more about our free resources?</h3>' +
-        '<p>Checklists, guides, and short courses that help you manage your bookkeeping and tax. Optional, and we will not spam you.</p>' +
+        '<h3>' + L.h + '</h3>' +
+        '<p>' + L.p + '</p>' +
         '<form novalidate>' +
-          '<input type="text" name="name" placeholder="Name" autocomplete="name" aria-label="Name">' +
-          '<input type="email" name="email" placeholder="Email" autocomplete="email" required aria-label="Email">' +
+          '<input type="text" name="name" placeholder="' + L.name + '" autocomplete="name" aria-label="' + L.name + '">' +
+          '<input type="email" name="email" placeholder="' + L.email + '" autocomplete="email" required aria-label="' + L.email + '">' +
           '<input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">' +
           '<div class="form-status" aria-live="polite"></div>' +
-          '<button type="submit" class="btn btn--gold">Send them my way</button>' +
-          '<button type="button" class="optin-modal__later">No thanks</button>' +
+          '<button type="submit" class="btn btn--gold">' + L.send + '</button>' +
+          '<button type="button" class="optin-modal__later">' + L.later + '</button>' +
         '</form>' +
       '</div>';
     document.body.appendChild(popupEl);
@@ -299,7 +335,8 @@
     if (firstField && !reduce) setTimeout(function () { firstField.focus(); }, 120);
 
     wireOptinForm(card.querySelector("form"), function () {
-      card.innerHTML = '<p class="optin__done">Thanks. Check your inbox soon.</p>';
+      card.innerHTML = '<p class="optin__done" dir="' + (RTL ? "rtl" : "ltr") + '">' +
+        (RTL ? "ممنون. به‌زودی ایمیلتان را بررسی کنید." : "Thanks. Check your inbox soon.") + '</p>';
       var inline = root.querySelector("#course-optin");
       if (inline) inline.hidden = true;
       setTimeout(closePopup, 1600);

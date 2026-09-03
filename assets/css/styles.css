@@ -1131,7 +1131,7 @@ p { text-wrap: pretty; }
   transition: transform 0.24s var(--ease);
 }
 .optin-modal.is-in .optin-modal__card { transform: none; }
-.optin-modal__card h3 { font-size: var(--step-1); padding-right: 1.5rem; }
+.optin-modal__card h3 { font-size: var(--step-1); padding-inline-end: 1.5rem; }
 .optin-modal__card > p { color: var(--text-muted); font-size: var(--step--1); margin-top: 0.5rem; }
 .optin-modal form { display: grid; gap: 0.7rem; margin-top: var(--s-3); }
 .optin-modal input {
@@ -1143,7 +1143,7 @@ p { text-wrap: pretty; }
 .optin-modal .btn { justify-content: center; }
 .optin-modal__close {
   position: absolute;
-  top: 0.6rem; right: 0.6rem;
+  top: 0.6rem; inset-inline-end: 0.6rem;
   width: 36px; height: 36px;
   display: grid; place-items: center;
   border: 0; background: transparent;
