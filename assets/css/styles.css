@@ -977,20 +977,35 @@ p { text-wrap: pretty; }
   text-align: left;
   font-family: "Vazirmatn", "Segoe UI", Tahoma, system-ui, sans-serif;
 }
-.course { display: grid; gap: clamp(1.5rem, 4vw, 2.75rem); align-items: start; }
-.course__main { order: -1; }            /* video first on mobile */
+/* Mobile (default): stacks in DOM order — video, then the full lesson list,
+   then the opt-in. On desktop it becomes list-left / video-right. */
+.course { display: grid; gap: clamp(1.75rem, 4vw, 2.75rem); align-items: start; }
 @media (min-width: 940px) {
-  .course { grid-template-columns: 320px minmax(0, 1fr); }
-  .course__main { order: 0; }
-  .course__aside { position: sticky; top: calc(var(--header-h) + 1rem); max-height: calc(100vh - var(--header-h) - 2rem); overflow-y: auto; }
+  .course {
+    grid-template-columns: 320px minmax(0, 1fr);
+    grid-template-areas:
+      "aside main"
+      "aside optin";
+  }
+  .course__main  { grid-area: main; }
+  .course__aside {
+    grid-area: aside;
+    position: sticky;
+    top: calc(var(--header-h) + 1rem);
+    max-height: calc(100vh - var(--header-h) - 2rem);
+    overflow-y: auto;
+  }
+  #course-optin  { grid-area: optin; }
 }
 
+.course__aside-head { margin-bottom: 0.75rem; }
+.course__aside-title { font-size: var(--step-1); }
 .course__progress {
   font-family: var(--font-mono);
   font-size: var(--step--1);
   letter-spacing: 0.05em;
   color: var(--text-muted);
-  margin-bottom: var(--s-2);
+  margin-top: 0.25rem;
 }
 .course__bar { height: 4px; background: var(--line); border-radius: var(--radius-pill); overflow: hidden; margin-bottom: var(--s-3); }
 .course__bar > i { display: block; height: 100%; background: var(--gold-500); width: 0; transition: width 0.4s var(--ease); }
@@ -1079,9 +1094,8 @@ p { text-wrap: pretty; }
 .player__msg h3 { color: #fff; font-size: var(--step-1); }
 .player__msg p { color: #b9c6e6; font-size: var(--step--1); margin-top: 0.5rem; }
 
-/* Optional opt-in card under the player (never blocks anything) */
+/* Optional opt-in card (never blocks anything) */
 .optin {
-  margin-top: var(--s-4);
   padding: clamp(1.35rem, 3vw, 1.9rem);
   border-radius: var(--radius);
   background: var(--navy-100);

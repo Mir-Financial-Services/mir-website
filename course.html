@@ -59,19 +59,7 @@
       <div class="container">
         <div class="course" data-course>
 
-          <!-- Lesson list -->
-          <aside class="course__aside">
-            <p class="course__progress" id="course-progress">0 of 11 lessons watched</p>
-            <div class="course__bar" aria-hidden="true"><i></i></div>
-            <nav id="lesson-list" class="lesson-list" aria-label="Course lessons">
-              <!-- lessons render here; static fallback below for no-JS -->
-              <noscript>
-                <p class="form__note" style="padding:0.75rem">This course needs JavaScript to play the videos. Please enable it, or <a href="contact.html">contact us</a> for the lesson links.</p>
-              </noscript>
-            </nav>
-          </aside>
-
-          <!-- Player + lesson body + opt-in -->
+          <!-- Player + current lesson -->
           <div class="course__main">
             <div class="player" id="player-wrap">
               <div id="course-player"></div>
@@ -82,22 +70,38 @@
             <div class="lesson-body">
               <h2 id="lesson-title">Lesson 1</h2>
             </div>
-
-            <aside class="optin" id="course-optin">
-              <div class="optin__text">
-                <h2 class="optin__title">Want to hear more about our free resources?</h2>
-                <p>Checklists, guides, and short courses that help you manage your bookkeeping and tax. Just let us know where we should send them. Optional.</p>
-              </div>
-              <form class="optin__form" novalidate>
-                <input type="text" name="name" placeholder="Name" autocomplete="name" aria-label="Name">
-                <input type="email" name="email" placeholder="Email" autocomplete="email" required aria-label="Email">
-                <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">
-                <button type="submit" class="btn btn--gold">Send them my way</button>
-                <div class="form-status" aria-live="polite"></div>
-                <p class="optin__fine">We store your details to send these resources, in line with our <a href="privacy.html">Privacy Policy</a>. Unsubscribe anytime.</p>
-              </form>
-            </aside>
           </div>
+
+          <!-- Lesson list -->
+          <aside class="course__aside">
+            <div class="course__aside-head">
+              <h2 class="course__aside-title">All lessons</h2>
+              <p class="course__progress" id="course-progress">0 of 11 lessons watched</p>
+            </div>
+            <div class="course__bar" aria-hidden="true"><i></i></div>
+            <nav id="lesson-list" class="lesson-list" aria-label="Course lessons">
+              <!-- lessons render here; static fallback below for no-JS -->
+              <noscript>
+                <p class="form__note" style="padding:0.75rem">This course needs JavaScript to play the videos. Please enable it, or <a href="contact.html">contact us</a> for the lesson links.</p>
+              </noscript>
+            </nav>
+          </aside>
+
+          <!-- Opt-in (optional) -->
+          <aside class="optin" id="course-optin">
+            <div class="optin__text">
+              <h2 class="optin__title">Want to hear more about our free resources?</h2>
+              <p>Checklists, guides, and short courses that help you manage your bookkeeping and tax. Just let us know where we should send them. Optional.</p>
+            </div>
+            <form class="optin__form" novalidate>
+              <input type="text" name="name" placeholder="Name" autocomplete="name" aria-label="Name">
+              <input type="email" name="email" placeholder="Email" autocomplete="email" required aria-label="Email">
+              <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">
+              <button type="submit" class="btn btn--gold">Send them my way</button>
+              <div class="form-status" aria-live="polite"></div>
+              <p class="optin__fine">We store your details to send these resources, in line with our <a href="privacy.html">Privacy Policy</a>. Unsubscribe anytime.</p>
+            </form>
+          </aside>
 
         </div>
       </div>
