@@ -375,7 +375,13 @@ p { text-wrap: pretty; }
   }
   .nav__inner.is-open { transform: translateY(0); opacity: 1; pointer-events: auto; }
   .nav__links { flex-direction: column; align-items: stretch; gap: 0; }
-  .nav__links a { padding: 0.85rem 0; border-bottom: 1px solid var(--line); font-size: 1.1rem; }
+  .nav__links a {
+    display: block;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 1.1rem;
+  }
+  .nav__links li:last-child a { border-bottom: 0; }
   .nav__links a::after { display: none; }
   .nav__cta { flex-direction: column; align-items: stretch; }
   .nav__cta .btn { width: 100%; }
