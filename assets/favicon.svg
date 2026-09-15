@@ -1,6 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="MIR">
+<!-- Modern browsers use this for the tab/bookmark icon, almost always at a
+     tiny size, so it stays a single bold letter. The full "MIR" wordmark
+     lives in the larger PNG icons (favicon-48/96, apple-touch-icon, etc.)
+     where there is enough room to read it. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Mir Financial Services">
   <rect width="64" height="64" fill="#233f87"/>
-  <text x="32" y="43" text-anchor="middle"
+  <text x="32" y="45" text-anchor="middle"
         font-family="Arial, 'Helvetica Neue', Helvetica, sans-serif"
-        font-weight="900" font-size="30" letter-spacing="-1" fill="#ffffff">MIR</text>
+        font-weight="900" font-size="42" fill="#ffffff">M</text>
 </svg>
