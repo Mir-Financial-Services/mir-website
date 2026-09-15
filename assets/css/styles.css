@@ -447,7 +447,6 @@ p { text-wrap: pretty; }
   border-bottom: 1px solid rgba(255, 255, 255, 0.16);
 }
 .hero__logo {
-  filter: brightness(0) invert(1);
   width: 100%;
   max-width: clamp(220px, 28vw, 380px);
   justify-self: end;
@@ -935,7 +934,6 @@ p { text-wrap: pretty; }
 .site-footer a:hover { color: #fff; }
 .site-footer ul { display: grid; gap: 0.55rem; }
 .footer-brand p { max-width: 34ch; margin-top: var(--s-2); }
-.footer-brand img { filter: brightness(0) invert(1); }
 .footer-brand .brand__fallback { color: #fff; border-color: #fff; box-shadow: 0 0 0 2px var(--navy-900), 0 0 0 4px #fff; }
 .footer-bottom {
   margin-top: var(--s-5);
