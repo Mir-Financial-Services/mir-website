@@ -434,7 +434,7 @@ p { text-wrap: pretty; }
   max-width: 1120px;
   margin-inline: auto;
 }
-.hero__copy { max-width: 34rem; }
+.hero__copy { max-width: 46rem; }
 .hero__copy .eyebrow {
   display: flex;
   width: 100%;
@@ -445,11 +445,11 @@ p { text-wrap: pretty; }
 .hero__logo {
   filter: brightness(0) invert(1);
   width: 100%;
-  max-width: 440px;
+  max-width: 240px;
   justify-self: end;
 }
 @media (min-width: 900px) {
-  .hero__inner { grid-template-columns: minmax(0, 33rem) minmax(0, 1fr); }
+  .hero__inner { grid-template-columns: minmax(0, 1fr) minmax(0, 240px); max-width: 1180px; }
 }
 @media (max-width: 899px) {
   .hero__logo { display: none; }
