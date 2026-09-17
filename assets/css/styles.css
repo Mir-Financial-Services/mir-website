@@ -878,9 +878,7 @@ p { text-wrap: pretty; }
 
 /* ---------- Author byline ---------- */
 .byline {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
+  display: inline-block;
   margin-top: var(--s-2);
   padding: 0.45rem 1rem;
   border-radius: 999px;
@@ -892,7 +890,7 @@ p { text-wrap: pretty; }
 }
 .byline strong { color: #fff; font-weight: 700; }
 .byline--end {
-  display: flex;
+  display: block;
   margin-top: var(--s-6);
   padding: var(--s-3) var(--s-4);
   background: var(--mist);
