@@ -869,6 +869,7 @@ p { text-wrap: pretty; }
   border-bottom: 3px solid var(--gold-500);
   padding-block: clamp(3rem, 8vw, 5.5rem);
 }
+.page-hero--tight { padding-block: clamp(2rem, 5vw, 3rem); }
 .page-hero h1 { color: #fff; font-size: var(--step-4); }
 .page-hero .lead { color: #b9c6e6; margin-top: var(--s-2); }
 .breadcrumb { font-family: var(--font-mono); font-size: var(--step--1); color: #93a3cc; margin-bottom: var(--s-2); }
