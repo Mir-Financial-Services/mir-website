@@ -875,6 +875,32 @@ p { text-wrap: pretty; }
 .breadcrumb a { color: #93a3cc; text-decoration: none; }
 .breadcrumb a:hover { color: #fff; }
 
+/* ---------- Author byline ---------- */
+.byline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: var(--s-2);
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  background: rgba(200, 162, 74, 0.16);
+  border: 1px solid rgba(200, 162, 74, 0.45);
+  font-size: var(--step--1);
+  font-weight: 600;
+  color: #f3e2b0;
+}
+.byline strong { color: #fff; font-weight: 700; }
+.byline--end {
+  display: flex;
+  margin-top: var(--s-6);
+  padding: var(--s-3) var(--s-4);
+  background: var(--mist);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  color: var(--text);
+}
+.byline--end strong { color: var(--heading); font-weight: 700; }
+
 /* ---------- Article / prose ---------- */
 .prose { max-width: 68ch; }
 .prose > * + * { margin-top: var(--s-3); }
